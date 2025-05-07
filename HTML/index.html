@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Películas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">🎬 Listado de Películas</h1>
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th><th>Nombre</th><th>Puntuación</th><th>Fecha de Estreno</th>
+                <th>Recaudación</th><th>Categoría</th><th>Idioma</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        include("conexion.php");
+        $consulta = "SELECT p.id_pelicula, p.nombre, p.puntuacion, p.fecha_estreno, p.recaudacion,
+                            c.nombre AS categoria, i.nombre AS idioma
+                     FROM pelicula p
+                     JOIN categoria c ON p.id_categoria = c.id_categoria
+                     JOIN idioma i ON p.id_idioma = i.id_idioma";
+        $resultado = $conexion->query($consulta);
+
+        while ($fila = $resultado->fetch_assoc()) {
+            echo "<tr>
+                    <td>{$fila['id_pelicula']}</td>
+                    <td>{$fila['nombre']}</td>
+                    <td>{$fila['puntuacion']}</td>
+                    <td>{$fila['fecha_estreno']}</td>
+                    <td>\${$fila['recaudacion']}</td>
+                    <td>{$fila['categoria']}</td>
+                    <td>{$fila['idioma']}</td>
+                  </tr>";
+        }
+        ?>
+        </tbody>
+    </table>
+
+    <h2 class="mt-5">➕ Agregar Película</h2>
+    <form action="insertar.php" method="POST" class="row g-3 mt-3">
+        <div class="col-md-6">
+            <label class="form-label">Nombre:</label>
+            <input type="text" name="nombre" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Puntuación:</label>
+            <input type="number" step="0.1" name="puntuacion" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Fecha estreno:</label>
+            <input type="date" name="fecha_estreno" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Recaudación:</label>
+            <input type="number" name="recaudacion" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Categoría:</label>
+            <input type="text" name="categoria" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Idioma:</label>
+            <input type="text" name="idioma" class="form-control" required>
+        </div>
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary">Agregar Película</button>
+        </div>
+    </form>
+
+    <div class="mt-5 text-center">
+        <a href="index.php" class="btn btn-secondary">Volver al Inicio</a>
+    </div>
+</div>
+
+</body>
+</html>
